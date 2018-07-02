@@ -141,7 +141,8 @@
 <p>Detached threads truly run in the background. It isn’t possible to obtain a std::thread object that references it; ownership and control are passed over to the C++ Runtime Library, which ensures that the resources associated with the thread are correctly reclaimed when the thread exits.</p>
 <p>You can only call detach() for a std::thread object when joinable() returns true.</p>
 <p>Example: Word processor. Everytime when we want to open a new file, just run a new thread to open it and detach it. Then, reuese the same open thread waiting for new command.</p>
-<h4 id="2-Passing-arguments-to-a-thread-function"><a href="#2-Passing-arguments-to-a-thread-function" class="headerlink" title="2. Passing arguments to a thread function"></a>2. Passing arguments to a thread function</h4>
+<h4 id="2-Passing-arguments-to-a-thread-function"><a href="#2-Passing-arguments-to-a-thread-function" class="headerlink" title="2. Passing arguments to a thread function"></a>2. Passing arguments to a thread function</h4><p>2.2…</p>
+
       
     </div>
     <footer class="article-footer">
