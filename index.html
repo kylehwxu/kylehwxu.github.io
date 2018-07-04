@@ -62,6 +62,64 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-c-basic-datastructure" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/03/c-basic-datastructure/" class="article-date">
+  <time datetime="2018-07-03T20:20:33.000Z" itemprop="datePublished">2018-07-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/03/c-basic-datastructure/">c++-basic-datastructure</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://blog.csdn.net/u014465639/article/details/70241850" target="_blank" rel="noopener">https://blog.csdn.net/u014465639/article/details/70241850</a></p>
+<h4 id="Vector"><a href="#Vector" class="headerlink" title="Vector"></a>Vector</h4><p>Similar to ArrayList, O(1) visit, O(n) insert/copy.</p>
+<p>拥有一段连续的内存空间，因此支持随机存取，如果需要高效的随即存取，而不在乎插入和删除的效率，使用vector</p>
+<h4 id="List"><a href="#List" class="headerlink" title="List"></a>List</h4><p>Similar to LinkedList, not support random visit. Using list::iterator++ to iterate the whole list. Not support [].</p>
+<p>list拥有一段不连续的内存空间，因此不支持随机存取，如果需要大量的插入和删除，而不关心随即存取，则应使用list。</p>
+<h4 id="Dequeue"><a href="#Dequeue" class="headerlink" title="Dequeue"></a>Dequeue</h4><p>deque是双向开口的连续性存储空间。虽说是连续性存储空间，但这种连续性只是表面上的，实际上它的内存是动态分配的，它在堆上分配了一块一块的动态储存区，每一块动态存储去本身是连续的，deque自身的机制把这一块一块的存储区虚拟地连在一起。</p>
+<p>它首次插入一个元素，默认会动态分配512字节空间，当这512字节空间用完后，它会再动态分配自己另外的512字节空间，然后虚拟地连在一起。deque的这种设计使得它具有比vector复杂得多的架构、算法和迭代器设计。它的性能损失比之vector，是几个数量级的差别。</p>
+<p>与vector不同的是，deque还支持从开始端插入数据：push_front()</p>
+<h4 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h4><p>C++中map容器提供一个键值对（key/value）容器，map与multimap差别仅仅在于multiple允许一个键对应多个值。对于迭代器来说，可以修改实值，而不能修改key。Map会根据key自动排序。</p>
+<p> unordered_map：key没有sort</p>
+<p>底层红黑树实现：</p>
+<ol>
+<li>节点是红色或黑色。</li>
+<li>根是黑色。</li>
+<li>所有叶子都是黑色（叶子是NIL节点）。</li>
+<li>每个红色节点必须有两个黑色的子节点。（从每个叶子到根的所有路径上不能有两个连续的红色节点。）</li>
+<li>从任一节点到其每个叶子的所有简单路径都包含相同数目的黑色节点（简称黑高）。</li>
+</ol>
+<h4 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h4><p>set的含义是集合，它是一个有序的容器，里面的元素都是排序好的，支持插入，删除，查找等操作，就像一个集合一样。所有的操作的都是严格在logn时间之内完成，效率非常高。set和multiset的区别是：set插入的元素不能相同，但是multiset可以相同。Set默认自动排序。使用方法类似list。</p>
+<p>unordered_set: key 没有排序</p>
+<h4 id="Forward-List"><a href="#Forward-List" class="headerlink" title="Forward_List"></a>Forward_List</h4><p>Doubly linked list</p>
+<h4 id="Priority-Queue"><a href="#Priority-Queue" class="headerlink" title="Priority Queue"></a>Priority Queue</h4><p>sorted values, the top is default to be the greatest</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/07/03/c-basic-datastructure/" data-id="cjj7foogw000074vkw9tb9d7n" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-concurrency-in-c-2" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/07/02/concurrency-in-c-2/" class="article-date">
@@ -146,7 +204,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/02/concurrency-in-c-2/" data-id="cjj4sg0v90000l1vkpn8foe9l" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/02/concurrency-in-c-2/" data-id="cjj7foohm000274vkcphxcuvk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -186,7 +244,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/06/30/useful-link/" data-id="cjj4sg0vp0003l1vk2q3afwwl" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/06/30/useful-link/" data-id="cjj7fooht000474vkw4ysvfrm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -238,7 +296,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/06/30/concurrency-in-c/" data-id="cjj4sg0vf0001l1vkgignw9xm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/06/30/concurrency-in-c/" data-id="cjj7fooh4000174vk1v9a4wlq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -283,7 +341,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/06/30/hello-world/" data-id="cjj4sg0vh0002l1vkwkh9jrc8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/06/30/hello-world/" data-id="cjj7foohr000374vkovoya6q6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -322,6 +380,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/07/03/c-basic-datastructure/">c++-basic-datastructure</a>
+          </li>
         
           <li>
             <a href="/2018/07/02/concurrency-in-c-2/">concurrency-in-c-2</a>
