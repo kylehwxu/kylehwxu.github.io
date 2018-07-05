@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>concurrency-in-c-3 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Sharing data between threads1. Problems with sharing data between threadsIf all the files are read-only, it won’t make mistakes. But if there’s some write/modification, there would be a problem. a. Ra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="concurrency-in-c-3">
+<meta property="og:url" content="http://yoursite.com/2018/07/04/concurrency-in-c-3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Sharing data between threads1. Problems with sharing data between threadsIf all the files are read-only, it won’t make mistakes. But if there’s some write/modification, there would be a problem. a. Ra">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-07-05T04:21:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="concurrency-in-c-3">
+<meta name="twitter:description" content="Sharing data between threads1. Problems with sharing data between threadsIf all the files are read-only, it won’t make mistakes. But if there’s some write/modification, there would be a problem. a. Ra">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-concurrency-in-c-3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/04/concurrency-in-c-3/" class="article-date">
+  <time datetime="2018-07-04T20:43:20.000Z" itemprop="datePublished">2018-07-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      concurrency-in-c-3
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Sharing-data-between-threads"><a href="#Sharing-data-between-threads" class="headerlink" title="Sharing data between threads"></a>Sharing data between threads</h3><h4 id="1-Problems-with-sharing-data-between-threads"><a href="#1-Problems-with-sharing-data-between-threads" class="headerlink" title="1. Problems with sharing data between threads"></a>1. Problems with sharing data between threads</h4><p>If all the files are read-only, it won’t make mistakes.</p>
+<p>But if there’s some write/modification, there would be a problem.</p>
+<h5 id="a-Race-conditions"><a href="#a-Race-conditions" class="headerlink" title="a. Race conditions"></a>a. Race conditions</h5><h5 id="b-mutex"><a href="#b-mutex" class="headerlink" title="b. mutex"></a>b. mutex</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::mutex some_mutex;</span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; guard(some_mutex);</span><br><span class="line"><span class="comment">// it locks the supplied mutex on construction and unlocks it on destruction, thus ensuring a locked mutex is always correctly unlocked</span></span><br></pre></td></tr></table></figure>
+<p>Don’t pass pointers and references to protected data outside the scope of the lock, whether by returning them from a function, storing them in externally visible memory, or passing them as arguments to user-supplied functions. </p>
+<p>note:</p>
+<p><em>shared_ptr</em>: 允许多个对象管理同一个指针，但仅当管理这个指针的最后一个对象析构时才调用delete</p>
+<p>实现使用引用计数（reference counting）。引用计数指的是，所有管理同一个裸指针（raw pointer）的shared_ptr，都共享一个引用计数器，每当一个shared_ptr被赋值（或拷贝构造）给其它shared_ptr时，这个共享的引用计数器就加1，当一个shared_ptr析构或者被用于管理其它裸指针时，这个引用计数器就减1，如果此时发现引用计数器为0，那么说明它是管理这个指针的最后一个shared_ptr了，于是我们释放指针指向的资源。</p>
+<p>问题是循环引用时候，仍然存在内存泄漏</p>
+<p>weak_ptr: 帮助shared_ptr观察计数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sh = <span class="built_in">std</span>::make_shared&lt;<span class="keyword">int</span>&gt;();</span><br><span class="line"><span class="comment">// 用一个shared_ptr初始化</span></span><br><span class="line"><span class="built_in">std</span>::weak_ptr&lt;<span class="keyword">int</span>&gt; w(sh);</span><br><span class="line"><span class="comment">// 变出shared_ptr</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; another = w.lock();</span><br><span class="line"><span class="comment">// 判断weak_ptr所观察的shared_ptr的资源是否已经释放</span></span><br><span class="line"><span class="keyword">bool</span> isDeleted = w.expired();</span><br></pre></td></tr></table></figure>
+<p>Summary:</p>
+<ol>
+<li>用shared_ptr，不用new</li>
+<li>使用weak_ptr来打破循环引用</li>
+<li>用make_shared来生成shared_ptr</li>
+<li>用enable_shared_from_this来使一个类能获取自身的shared_ptr</li>
+<li></li>
+</ol>
+<h5 id="c-Dead-lock"><a href="#c-Dead-lock" class="headerlink" title="c. Dead lock"></a>c. Dead lock</h5>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/07/04/concurrency-in-c-3/" data-id="cjj8rv7ub00022nvkgizij1ow" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/07/03/c-basic-datastructure/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">c++-basic-datastructure</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/04/concurrency-in-c-3/">concurrency-in-c-3</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/03/c-basic-datastructure/">c++-basic-datastructure</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/02/concurrency-in-c-2/">concurrency-in-c-2</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/30/useful-link/">useful_link.md</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/30/concurrency-in-c/">Concurrency in c++ ——— 1</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
